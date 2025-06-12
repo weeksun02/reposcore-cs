@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Drawing;
+using SDColor = System.Drawing.Color;
 using ConsoleTables;
 using ScottPlot;
 using ScottPlot.Plottables;
 using ScottPlot.TickGenerators;
 using Alignment = ScottPlot.Alignment;
-using Color = System.Drawing.Color;
+
 
 public class FileGenerator
 {
@@ -163,14 +163,19 @@ public class FileGenerator
 
         // Bar 데이터 생성
         var plt = new ScottPlot.Plot();
+        // ChartManager 에서 테마(색상, 배경 등)를 한 번에 적용
+        ChartManager.ApplyTheme(plt, ChartTheme.Default);
         var bars = new List<Bar>();
         for (int i = 0; i < scores.Length; i++)
         {
+            // "User (Rank)" → "User" 만 뽑아서 색상 매핑 키로 사용
+            string userKey = labels[i].Split(' ')[0];
+            var fillColor = ChartManager.GetBarColor(userKey, ChartTheme.Default);
             bars.Add(new Bar
             {
                 Position = positions[i],
                 Value = scores[i],
-                FillColor = Colors.SteelBlue,
+                FillColor = fillColor,
                 Orientation = Orientation.Horizontal,
                 Size = 5,
             });
